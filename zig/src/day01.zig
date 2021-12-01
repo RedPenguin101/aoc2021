@@ -6,25 +6,22 @@ const stdout = std.io.getStdOut();
 pub fn main() !void {
   var num_buff: [100]u8 = undefined;
   var previous_num: usize = 0;
-
   var count_p1: usize = 0;
 
   var i: usize = 0;
   var count_p2: usize = 0;
-  var sw: [4]usize = .{0,0,0,0};
+  var sw: [3]usize = .{0,0,0};
 
   while (try stdin.reader().readUntilDelimiterOrEof(&num_buff, '\n')) |num_str| {
       const this_num = try std.fmt.parseInt(usize, num_str, 10);
       
-      sw[1] += this_num;
-      sw[2] += this_num;
-      sw[3] += this_num;
-
-      if ((i > 2) and (sw[0] < sw[1])) count_p2 += 1;
+      // part 2
+      // In sliding window, 'middle' terms cancel, so only test required
+      // is whether this number is greater than the one 3 indexes back
+      if ((i > 2) and (sw[0] < this_num)) count_p2 += 1;
       sw[0] = sw[1];
       sw[1] = sw[2];
-      sw[2] = sw[3];
-      sw[3] = 0;
+      sw[2] = this_num;
       i += 1;
 
       // Part 1 (has to be below because of that continue, bleh)
