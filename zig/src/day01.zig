@@ -14,6 +14,10 @@ pub fn main() !void {
 
   while (try stdin.reader().readUntilDelimiterOrEof(&num_buff, '\n')) |num_str| {
       const this_num = try std.fmt.parseInt(usize, num_str, 10);
+
+      // part 1
+      if ((i > 0) and (this_num > previous_num)) count_p1 += 1;
+      previous_num = this_num;
       
       // part 2
       // In sliding window, 'middle' terms cancel, so only test required
@@ -23,11 +27,6 @@ pub fn main() !void {
       sw[1] = sw[2];
       sw[2] = this_num;
       i += 1;
-
-      // Part 1 (has to be below because of that continue, bleh)
-      if (previous_num == 0) { previous_num = this_num; continue; }
-      if (this_num > previous_num) count_p1 += 1;
-      previous_num = this_num;
   }
 
   try stdout.writer().print("Part 1: {d}\n", .{count_p1});
