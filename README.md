@@ -2,8 +2,8 @@
 
 ## Notes and solution walkthroughs
 
-* [Zig learning notes](./zig/notes.md)
-* [day 1 problem walkthrough (Clojure)](./clojure/day01.md)
+* [Zig language learning notes](./zig/notes.md)
+* [day 1 problem walkthrough](./day01.md)
 
 ## Solutions
 
