@@ -1,6 +1,4 @@
-# Advent of Code 2021
-
-## Day 1: Sonar Sweep
+# AOC2021 Day 1: Sonar Sweep
 
 Given a list of integers, count the number of times the item in the list increases. For example:
 
