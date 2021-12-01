@@ -33,7 +33,7 @@ Part 2 has us the number of times the sum of measurements in a 3 sliding window 
      (partition 3 1)
      (map #(apply + %))
      (partition 2 1)
-     (filter #(< apply %))
+     (filter #(apply < %))
      count)
 ;; => 1739
 ```
