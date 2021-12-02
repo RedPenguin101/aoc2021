@@ -21,15 +21,19 @@
    (+ y (* p aim))
    (+ aim d-aim)])
 
-(->> (str/split-lines "forward 5\ndown 5\nforward 8\nup 3\ndown 8\nforward 2")
-     (map parse)
-     (reduce proc [0 0 0])
-     (take 2)
-     (apply *))
-
 (->> input
      (map parse)
      (reduce proc [0 0 0])
      (take 2)
      (apply *))
 ;; => 1840311528
+
+; Inelegant redo of part 1 using function from
+; part 2, based on idea from tschady. Works better
+; with his solution though.
+(->> input
+     (map parse)
+     (reduce proc [0 0 0])
+     ((juxt first last))
+     (apply *))
+;; => 2073315

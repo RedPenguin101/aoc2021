@@ -42,3 +42,6 @@ switch (dir[0]) {
 
 Not sure about that panic. Might be a better way to do that.
 
+One thing I tried to to later in the day was add a build script. My intent was to do it with a loop, but I couldn't get it to work, both because (I think) re-using an executable is not intended, and because I can't figure out how to pad format a number.
+
+So: How do you pad format a number? Maybe just string concat?
