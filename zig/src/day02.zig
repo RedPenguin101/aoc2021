@@ -36,6 +36,6 @@ pub fn main() !void {
         }
     }
 
-    try stdout.writer().print("{d}\n", .{x * y});
-    try stdout.writer().print("{d}\n", .{x * y2});
+    try stdout.writer().print("Day 2 Part 1: {d}\n", .{x * y});
+    try stdout.writer().print("Day 2 Part 2: {d}\n", .{x * y2});
 }
