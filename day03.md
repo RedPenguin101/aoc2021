@@ -22,10 +22,7 @@ About 20 mins later: Couldn't figure out a smart way to do it, so here's a stupi
 (defn pivot [xs] (apply map vector xs))
 (defn least-most-common [xs] (map first (sort-by val (frequencies xs))))
 
-(->> input
-     pivot
-     (map least-most-common)
-     pivot
+(->> (pivot (map least-most-common (pivot input)))
      (map #(Long/parseLong (apply str %) 2))
      (apply *))
 ```
