@@ -12,15 +12,9 @@ The _epsilon_ uses the _least_ common bit.
 
 Multiply the gamma and epsilon together.
 
-It would be simply enough to treat each bit as a character and count the frequencies. But since this is a binary problem, there must be a way to do this using binary operations.
+It would be simply enough to treat each bit as a character and count the frequencies. But since this is a binary problem, there must be a way to do this using binary operations. I feel like this is something to do with checksums and error detection? The counting thing is hard though, since you only have one bit. Or maybe there's a trick in that gamma and epsilon are inverse: wherever gamma has a 1, epsilon has a 0.
 
 The problem does say what to do in case of a tie, so I'd assume there aren't any.
-
-I feel like this is something to do with checksums and error detection?
-
-The counting thing is hard though, since you only have one bit.
-
-Or maybe there's a trick in that gamma and epsilon are inverse: wherever gamma has a 1, epsilon has a 0.
 
 About 20 mins later: Couldn't figure out a smart way to do it, so here's a stupid way:
 
@@ -44,9 +38,9 @@ Can't help feeling like I missed a trick somewhere though. One thing I saw is th
 
 ## Part 2
 
-The _OGR_ and _COSR_ both use a bitwise filtering process. Each measure has a _bit criteria_ which is used in the bitwise filter. This is applied successively until only 1 value remains.
+The _OGR_ and _COSR_ both use a bitwise filtering process. Each measure has a _bit criteria_ which is used which is used to filter out numbers. This is applied successively until only 1 value remains.
 
-For the OGR, the bit criteria is: for the first bit, find the _most common bit_, and exclude anything that isn't that bit for that position. Then move on to the second bit. Draws are won by 1.
+For the OGR, the bit criteria is: for the first bit, find the _most common bit_, and exclude anything that isn't that bit for that position. Then move on to the second bit, etc. Draws are won by 1.
 
 The COSR is the same, but with _least common_. Draws are won by 0.
 
