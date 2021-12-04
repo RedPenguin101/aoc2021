@@ -239,7 +239,7 @@ The [source file](./clojure/src/aoc2021/day04.clj).
 (defn time-to-win [board cumulative-draws]
   (count (take-while #(not (has-won? board %)) cumulative-draws)))
 
-(defn sort-by-ttw [boards cumulative-draws]
+(defn sort-by-time-to-win [boards cumulative-draws]
   (->> boards
        (map (juxt #(time-to-win % cumulative-draws) identity))
        (sort-by first)
@@ -253,7 +253,7 @@ The [source file](./clojure/src/aoc2021/day04.clj).
          (* (last win-draws)))))
 
 (time (let [cumulative-draws (reductions conj [] draws)
-            sorted-boards (sort-by-ttw boards cumulative-draws)]
+            sorted-boards (sort-by-time-to-win boards cumulative-draws)]
         [:quickest (score-winning-state (first sorted-boards) cumulative-draws)
          :slowest  (score-winning-state (last sorted-boards) cumulative-draws)]))
 ;; Elapsed time: 367.260945 msecs

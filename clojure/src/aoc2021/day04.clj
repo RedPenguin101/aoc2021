@@ -20,7 +20,7 @@
 (defn time-to-win [board cumulative-draws]
   (count (take-while #(not (has-won? board %)) cumulative-draws)))
 
-(defn sort-by-ttw [boards cumulative-draws]
+(defn sort-by-time-to-win [boards cumulative-draws]
   (->> boards
        (map (juxt #(time-to-win % cumulative-draws) identity))
        (sort-by first)
@@ -35,7 +35,7 @@
 
 (comment
   (time (let [cumulative-draws (reductions conj [] draws)
-              sorted-boards (sort-by-ttw boards cumulative-draws)]
+              sorted-boards (sort-by-time-to-win boards cumulative-draws)]
           [:quickest
            (score-winning-state (first sorted-boards) cumulative-draws)
            :slowest
