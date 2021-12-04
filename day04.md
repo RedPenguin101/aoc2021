@@ -182,7 +182,7 @@ I also think it's less beautiful than what I had before, which was very declarat
 (first (sort-by #(time-to-win % cumulative-draws) boards))
 ```
 
-The reason I got rid of this is because I though it wasn't short circuiting on the time-to-win calculation. But since part 2 _doesn't_ short circuit, and is just about as fast, that can't be it.
+The reason I got rid of this is because I thought the slowness was due to it not short circuiting on the time-to-win calculation. But since part 2 _doesn't_ short circuit, and is just about as fast, that can't be it.
 
 So why is the plain sort-by so much slower than the reduce? Maybe the sort algorithm is calling `time-to-win` more than once on each board, where the reduce solution is calling it only once? So I think if I precalc the time to win and sort by that, I should avoid that problem:
 
