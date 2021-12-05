@@ -54,7 +54,7 @@ For part 2 we need to extend it to diagonal lines. I think we can do this just b
 
 This has the nice property that not only does out solving code for part 1 not need to change, but our solution code for part 2 just _removes_ a transform from part 1.
 
-./clojure/src/aoc2021/day05.clj[link to src]
+[link to src](./clojure/src/aoc2021/day05.clj)
 
 ``` clojure
 (defn extract-ints [coll] (mapv #(Long/parseLong %) (re-seq #"\d+" coll)))
