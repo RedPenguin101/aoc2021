@@ -1,5 +1,6 @@
 (ns aoc2021.day07
-  (:require [aoc2021.utils :as u]))
+  (:require [aoc2021.utils :as u]
+            [aoc2021.chart :as c]))
 
 (def input (u/extract-ints (slurp "resources/day07input.txt")))
 
@@ -23,10 +24,15 @@
   (time (->> (range (apply min input) (apply max input))
              (map #(sum-distance2 input %))
              (apply min)))
-  (->> (range (apply min input) (apply max input))
-       (map (juxt identity #(sum-distance2 input %))))
-
 ;; Elapsed time: 5470.86931 msecs
 ;; => 91257582
   )
 
+(comment
+  (c/scatter (->> (range (apply min input) (apply max input))
+                  (map (juxt identity #(sum-distance2 input %))))
+             1000 1000)
+
+  (c/scatter (->> (range (apply min input) (apply max input))
+                  (map (juxt identity #(sum-distance input %))))
+             1000 1000))
