@@ -20,6 +20,15 @@
 (defn sum-distance2 [xs y]
   (apply + (map #(tri-num (Math/abs (- y %))) xs)))
 
+(defn cost1 [xs]
+  (fn [y]
+    (long (apply + (map #(Math/abs (- y %)) xs)))))
+
+(defn cost2 [xs]
+  (fn [y]
+    (long (apply + (map #(tri-num (Math/abs (- y %))) xs)))))
+
+
 (comment
   (time (->> (range (apply min input) (apply max input))
              (map #(sum-distance2 input %))
