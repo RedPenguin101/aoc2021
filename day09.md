@@ -9,17 +9,19 @@ The input is a _height map_. A _low point_ is a point that is lower than any of 
 This seems like a case of turning the input into a coordinate system of integers, writing an adjacent function, and then mapping over it.
 
 ```clojure
-(defn adjacents [[x y]] [[(inc x) y] [(dec x) y] [x (inc y)] [x (dec y)]])
+(defn adjacents [[x y]] (set [[(inc x) y] [(dec x) y] [x (inc y)] [x (dec y)]]))
 
-(defn low-point? [coord coord-map] 
+(defn low-point? [coord coord-map]
   (< (coord-map coord)
      (apply min (vals (select-keys coord-map (adjacents coord))))))
 
-(->> (keys input)
-     (filter #(low-point? % input))
+(defn low-points [coord-map] (filter #(low-point? % input) (keys coord-map)))
+
+(->> (low-points input)
      (map input)
      (map inc)
      (apply +))
+;; => 522
 ```
 
 ## Part 2
@@ -32,16 +34,14 @@ This is like a search, where starting from each low point, you find the adjacent
 
 ``` clojure
 (defn find-basin
-  ([coord-map start] (find-basin coord-map #{} [start] #{}))
-  ([coord-map basin queue seen]
-   (if (empty? queue) basin
-       (let [nxt (first queue)
-             adj (set/difference (set (adjacents nxt)) seen)
-             new-basins (remove #(= 9 (or (coord-map %) 9)) adj)]
-         (recur coord-map
-                (into basin new-basins)
-                (into (rest queue) new-basins)
-                (into seen (set (adjacents nxt))))))))
+  ([coord-map start] (find-basin coord-map #{start} #{}))
+  ([coord-map basin tried]
+   (if-let [nxt (first (set/difference basin tried))]
+     (recur coord-map
+            (into basin (->> (set/difference (adjacents nxt) basin)
+                             (remove #(= 9 (get coord-map % 9)))))
+            (conj tried nxt))
+     basin)))
 
 (time (->> (low-points input)
            (map #(find-basin input %))
@@ -52,3 +52,4 @@ This is like a search, where starting from each low point, you find the adjacent
 ;; Elapsed time: 120.022713 msecs
 ;; => 916688
 ```
+
