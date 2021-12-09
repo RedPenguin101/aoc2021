@@ -41,7 +41,21 @@ I see two observations coming up on other peoples solutions:
 1. The answer is close to the mean and/or median
 2. You can avoid a linear search with a binary search
 
-These both seem _reasonable_, but I haven't seen anyone prove them out. For the second, this would presumably imply that the distance has a single 'peak' (i.e. roughly in the form d=x^2), otherwise you risk honing in on the wrong solution.
+## An answer close to the median/mean
 
-Is this true? We can graph it... OH GOD DATAVIZ IN CLOJURE, NEVER MIND
+For part 1, the optimal convergence distance _k_ is the median. I don't know exactly how to prove this, but it is basically the definition of median.
+
+``` clojure
+(sum-distance input (median input))
+;; => 328187
+```
+
+For part 2, the optimal convergence distance _k_ is within 0.5 of the mean. The math here is too much for me, but some super smart person wrote a [paper](https://www.reddit.com/gallery/rawxad) proving it.
+
+``` clojure
+(let [m (mean input)]
+  (min (sum-distance2 input (Math/round (- m 0.5)))
+       (sum-distance2 input (Math/round (+ m 0.5)))))
+;; => 91257582
+```
 

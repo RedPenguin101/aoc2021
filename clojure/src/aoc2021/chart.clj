@@ -35,5 +35,13 @@
     (draw-points canvas points x-pix y-pix)
     (c2d/show-window canvas "Graph")))
 
+(defn scatter-save [points x-pix y-pix filepath]
+  (let [canvas (c2d/canvas x-pix y-pix)]
+    (c2d/with-canvas-> canvas (c2d/set-background 255 255 255))
+    (draw-axis-lines canvas x-pix y-pix)
+    (draw-points canvas points x-pix y-pix)
+    (c2d/save canvas filepath)))
+
 (comment
-  (draw-scatter [[1 10] [2 15] [3 20]] 1000 1000))
+  (scatter [[1 10] [2 15] [3 20]] 1000 1000)
+  (scatter-save [[1 10] [2 15] [3 20]] 1000 1000 "./test.png"))

@@ -3,45 +3,16 @@
             [aoc2021.chart :as c]))
 
 (def input (u/extract-ints (slurp "resources/day07input.txt")))
-
-(defn sum-distance [xs y]
-  (apply + (map #(Math/abs (- y %)) xs)))
-
-(comment
-  (time (->> (range (apply min input) (apply max input))
-             (map #(sum-distance input %))
-             (apply min)))
-;; Elapsed time: 5853.353022 msecs
-;; => 328187
-  )
-
 (defn tri-num [x] (/ (* x (inc x)) 2))
+(defn sum-distance [cost-fn xs y] (apply + (map #(cost-fn (Math/abs (- y %))) xs)))
+(defn mean   [input] (float (/ (apply + input) (count input))))
+(defn median [input] (nth (sort input) (/ (count input) 2)))
 
-(defn sum-distance2 [xs y]
-  (apply + (map #(tri-num (Math/abs (- y %))) xs)))
+;; part 1
+(sum-distance identity input (median input))
+;; => 328187
 
-(defn cost1 [xs]
-  (fn [y]
-    (long (apply + (map #(Math/abs (- y %)) xs)))))
-
-(defn cost2 [xs]
-  (fn [y]
-    (long (apply + (map #(tri-num (Math/abs (- y %))) xs)))))
-
-
-(comment
-  (time (->> (range (apply min input) (apply max input))
-             (map #(sum-distance2 input %))
-             (apply min)))
-;; Elapsed time: 5470.86931 msecs
+;; part 2
+(min (sum-distance tri-num input (Math/round (- (mean input) 0.5)))
+     (sum-distance tri-num input (Math/round (+ (mean input) 0.5))))
 ;; => 91257582
-  )
-
-(comment
-  (c/scatter (->> (range (apply min input) (apply max input))
-                  (map (juxt identity #(sum-distance2 input %))))
-             1000 1000)
-
-  (c/scatter (->> (range (apply min input) (apply max input))
-                  (map (juxt identity #(sum-distance input %))))
-             1000 1000))
