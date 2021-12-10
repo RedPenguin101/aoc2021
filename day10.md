@@ -27,21 +27,27 @@ The functions would be something like:
 * `score :: char -> int`
 
 ``` clojure
-(def brackets (apply hash-map "()<>{}[]"))
+(def brackets (apply hash-map "()<>{}[]")) ;; a map of opening to closing brackets
 (def score {\) 3 \] 57 \} 1197 \> 25137})
-(defn matches? [a b] (= b (brackets a)))
+(defn matches? [a b] (= b (brackets a))) ;; returns true if b is the closing bracket to a
 
 (defn find-corruption
   ([input] (find-corruption '() input))
   ([stack [nxt & rst]]
-  (cond (not nxt) 0
+  (cond ;; you've reached the end of the input with no corruption, return 0
+        (not nxt) 0 
 
+        ;; This is an opening bracket. Add it to the stack and recur
         ((set (keys brackets)) nxt)
         (recur (conj stack nxt) rst)
 
+        ;; this closing bracket correctly closes the latest opening bracket
+        ;; all is good, just continue with the rest of the stack and input
         (matches? (first stack) nxt)
         (recur (rest stack) rst)
 
+        ;; The closing bracket does NOT match the latest opening bracket
+        ;; This is a corruption! Return the score of the corrupted bracket
         :else (score nxt))))
 
 (reduce + (map find-corruption input)) ; 387363
@@ -65,7 +71,10 @@ The scoring system is:
 (defn autocompletion-string
   ([input] (autocompletion-string '() input))
   ([stack [nxt & rst]]
-  (cond (not nxt) (map brackets stack)
+  (cond ;; if you get to the end, return the stack, but with the opening brackets
+        ;; substituted with their closing counterparts
+        ;; This is the autocompletion string
+        (not nxt) (map brackets stack) 
 
         ((set (keys brackets)) nxt)
         (recur (conj stack nxt) rst)
@@ -87,7 +96,9 @@ The scoring system is:
      median) ; 4330777059
 ```
 
-This is pretty nice I think. The only thing that bothers me is the duplicative code in autocompletion string and find corruption. I think this would be find in a real program (if you are trying to autocomplete, you should probably be assuming that there are no syntax errors and throwing if there are), but here it rankles. Maybe I could change ac string to just nil out on a corrupt string:
+This is pretty nice I think. The only thing that bothers me is the duplicative code in autocompletion string and find corruption. I think this would be fine in a real program, since there's no guarantee the implementations will be so similar forever, and if you are trying to autocomplete, you should probably be assuming that there are no syntax errors and throwing if there are. 
+
+But in the context of a puzzle it rankles. Maybe I could change autocompletion string to just nil out on a corrupt string. That way they could just be ignored, and I wouldn't have to explicitly filter them out.
 
 ```clojure
 (defn autocompletion-string
@@ -101,12 +112,12 @@ This is pretty nice I think. The only thing that bothers me is the duplicative c
         (matches? (first stack) nxt)
         (recur (rest stack) rst)
 
-        :else nil)))
+        :else nil))) ;; <- the only change
 
 ,,,
 
 (->> input
-     (keep autocompletion-string)
+     (keep autocompletion-string) ;; <- no need to filter out corruptions
      (map score-autocompletion)
      median)
 ```
