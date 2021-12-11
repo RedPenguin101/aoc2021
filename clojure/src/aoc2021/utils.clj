@@ -11,3 +11,9 @@
   "Turns a 2d grid (coll of coll of x) into a map of coord->x"
   [grid]
   (into {} (apply concat (map-indexed (fn [y x-row] (map-indexed (fn [x v] [[x y] v]) x-row)) grid))))
+
+(defn adjacent8 [[x y]]
+  (set (for [x' (range -1 2) y' (range -1 2)
+        :when (not= 0 x' y')]
+          [(+ x x') (+ y y')])))
+
