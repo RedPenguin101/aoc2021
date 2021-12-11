@@ -3,9 +3,7 @@
             [clojure.set :as set]
             [aoc2021.utils :as u]))
 
-(defn digits [line] (mapv (comp #(Long/parseLong %) str) line))
-
-(def input (u/coordinate (mapv digits (str/split-lines (slurp "resources/day09input.txt")))))
+(def input (u/coordinate (mapv u/digits (str/split-lines (slurp "resources/day09input.txt")))))
 
 (defn adjacents [[x y]] (set [[(inc x) y] [(dec x) y] [x (inc y)] [x (dec y)]]))
 
