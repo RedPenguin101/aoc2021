@@ -13,6 +13,7 @@
 * [day 8 problem walkthrough UNFINISHED](./day08.md)
 * [day 9 problem walkthrough](./day09.md)
 * [day 10 problem walkthrough](./day10.md)
+* [day 11 problem walkthrough](./day11.md)
 
 ## Solutions
 
@@ -28,3 +29,4 @@
 | 8   | [src](./clojure/src/aoc2021/day08.clj) | |
 | 9   | [src](./clojure/src/aoc2021/day09.clj) | |
 | 10  | [src](./clojure/src/aoc2021/day10.clj) | |
+| 11  | [src](./clojure/src/aoc2021/day11.clj) | |
