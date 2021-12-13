@@ -22,5 +22,5 @@
   (let [[mx my] (map #(inc (apply max %)) (apply map vector points))]
     (str/join "\n" (for [y (range 0 my)]
       (apply str (for [x (range 0 mx)]
-        (if (points [x y]) \# \.)))))))
+        (if (points [x y]) \░ \.)))))))
 
