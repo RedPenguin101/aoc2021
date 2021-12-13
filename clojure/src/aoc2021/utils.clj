@@ -1,4 +1,5 @@
-(ns aoc2021.utils)
+(ns aoc2021.utils
+  (:require [clojure.string :as str]))
 
 (defn extract-ints [coll] (mapv #(Long/parseLong %) (re-seq #"\d+" coll)))
 (defn pivot [xs] (apply map vector xs))
@@ -16,4 +17,10 @@
   (set (for [x' (range -1 2) y' (range -1 2)
         :when (not= 0 x' y')]
           [(+ x x') (+ y y')])))
+
+(defn print-coord-set [points]
+  (let [[mx my] (map #(inc (apply max %)) (apply map vector points))]
+    (str/join "\n" (for [y (range 0 my)]
+      (apply str (for [x (range 0 mx)]
+        (if (points [x y]) \# \.)))))))
 
