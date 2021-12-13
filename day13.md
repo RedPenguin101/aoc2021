@@ -183,3 +183,27 @@ Some pretty ugly stuff in there, ripe for a tidy. But it gets the right answer t
 ;  #....#..#.#..#.#..#.#..#.#....#..#.#....
 ;  ####..##...##...##..#..#.#....#..#.#...."
 ```
+
+## Eureka moment: You don't need to store the canvas size
+
+So a worked myself into a corner with my implementation of `new-coord` being `new = canvas-size - 1 - old`. That's why I had to store the canvas size. But you don't need to do that at all, because the canvas size is `(2 * fold-line) + 1`. Fold line is already part of the input, so instead of using canvas size you can just use `new = (2 * fold-line) - old`. That gets rid of the need to store the canvas size, and so allows me to simplify the code a _lot_, to just 13 lines of code.
+
+```clojure
+(defn parse [input-str]
+  (let [[coords instr] (str/split input-str #"\n\n")]
+    [(set (map vec (partition 2 (u/extract-ints coords))))
+     (map vector (map #(if (= "x" %) 0 1) (re-seq #"[xy]" instr)) (u/extract-ints instr))]))
+
+(def input (parse (slurp "resources/day13input.txt")))
+
+(defn new-coord [axis fold-line coord]
+  (when (> (get coord axis) fold-line)
+    (update coord axis #(- (* 2 fold-line) %))))
+
+(defn fold [dots [axis fold-line]]
+  (set/union (set (remove #(>= (get % axis) fold-line) dots))
+             (set (keep #(new-coord axis fold-line %) dots))))
+
+(count (fold (first input) (first (second input))))
+(println (u/print-coord-set (apply reduce fold input)))
+```
