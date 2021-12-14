@@ -114,10 +114,12 @@ This agrees with the result of the code from part 1:
 After this, there are 2 challenges: get the frequency of the characters out of this, and turn the input into matrix/vectors. Take the last first:
 
 ```clojure
+;; Parse rule changes to return TWO outputs, one for each outputted pair. e.g. AB->C will become [[AB AC] [AB CB]]
 (defn parse-rule2 [line]
   (let [[in out] (re-seq #"[A-Z]+" line)]
     [[in (str (first in) out)] [in (str out (last in))]] ))
 
+;; this returns the vector representing the pairs and the matrix representing the rules. Also a position map, for some stupid reason
 (defn matrices [init-str rules-lines]
   (let [rules (mapcat parse-rule2 rules-lines)
         pos-map (zipmap (sort (set (map first rules))) (range))
@@ -202,12 +204,13 @@ Add all of this together and you get the rather heinous:
   (def input-str init-str)
   (def rules-parsed (mapcat parse-rule (str/split-lines rules))))
 
+;; this has been broken out from the 'matrices' function, since for both the vector and the matrix, the implementation is very similar.
 (defn matrix-from [in pos-map [r c]]
   (reduce (fn [m xs] (update-in m (map pos-map xs) inc))
           (u/make-matrix r c) in))
 
 (defn repeated-mat-mult [n v m] (last (take (inc n) (iterate #(u/matrix-mult % m) v))))
-(defn f [A [[a b] c]] (-> A (update a (fnil + 0) c) (update b (fnil + 0) c)))
+(defn f [A [[a b] c]] (-> A (update a (fnil + 0) c) (update b (fnil + 0) c))) ; bleh, not good
 (defn count-chars-from-pairs [pair-map] (u/update-vals (reduce f {} pair-map) / 2))
 (defn most-least-diff [m] (apply - (u/first-and-last (sort > (map second m)))))
 
@@ -216,11 +219,13 @@ Add all of this together and you get the rather heinous:
         input-vector (matrix-from (map #(vector (apply str %)) (partition 2 1 input-str)) pos-map [1 pairs])
         rules-matrix (matrix-from rules pos-map [pairs pairs])]
     (->> (repeated-mat-mult n input-vector rules-matrix)
-         (zipmap (sort (keys pos-map)))
-         (merge-with + {(u/first-and-last input-str) 1})
+         (zipmap (sort (keys pos-map))) ;; this translates the vector output into a map of pair->count
+         (merge-with + {(u/first-and-last input-str) 1}) ;; adding in a 'pair' representing the first and last chars of the initial string
          (count-chars-from-pairs)
          (most-least-diff))))
 
+; this is needed basically to figure out the appropriate row and column of the matrix each pair represents.
+; There's a better way to do this, but I couldn't be bothered to do it.
 (def pos-map (zipmap (sort (set (apply concat rules-parsed))) (range)))
 
 (calc 10 input-str rules-parsed pos-map)
