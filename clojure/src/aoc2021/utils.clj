@@ -24,3 +24,14 @@
       (apply str (for [x (range 0 mx)]
         (if (points [x y]) \░ \.)))))))
 
+(defn dot-product [v1 v2] (apply + (map * v1 v2)))
+
+(defn matrix-mult [v m]
+  (map #(dot-product v %) (apply map vector m)))
+
+(defn make-matrix [r c]
+  (if (= r 1)
+    (vec (repeat c 0))
+    (vec (repeat r (vec (repeat c 0))))))
+
+(defn first-and-last [coll] [(first coll) (last coll)])

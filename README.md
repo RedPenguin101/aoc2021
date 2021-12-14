@@ -16,6 +16,7 @@
 * [day 11 problem walkthrough](./day11.md)
 * [day 12 problem walkthrough](./day12.md)
 * [day 13 problem walkthrough](./day13.md)
+* [day 14 problem walkthrough](./day14.md)
 
 ## Solutions
 
@@ -34,3 +35,4 @@
 | 11  | [src](./clojure/src/aoc2021/day11.clj) | |
 | 12  | [src](./clojure/src/aoc2021/day12.clj) | |
 | 13  | [src](./clojure/src/aoc2021/day13.clj) | |
+| 14  | [src](./clojure/src/aoc2021/day14.clj) | |
