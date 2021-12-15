@@ -13,16 +13,18 @@
   [grid]
   (into {} (apply concat (map-indexed (fn [y x-row] (map-indexed (fn [x v] [[x y] v]) x-row)) grid))))
 
+(defn adjacent4 [[x y]] (set [[(inc x) y] [(dec x) y] [x (inc y)] [x (dec y)]]))
+
 (defn adjacent8 [[x y]]
   (set (for [x' (range -1 2) y' (range -1 2)
-        :when (not= 0 x' y')]
-          [(+ x x') (+ y y')])))
+             :when (not= 0 x' y')]
+         [(+ x x') (+ y y')])))
 
 (defn print-coord-set [points]
   (let [[mx my] (map #(inc (apply max %)) (apply map vector points))]
     (str/join "\n" (for [y (range 0 my)]
-      (apply str (for [x (range 0 mx)]
-        (if (points [x y]) \░ \.)))))))
+                     (apply str (for [x (range 0 mx)]
+                                  (if (points [x y]) \░ \.)))))))
 
 (defn dot-product [v1 v2] (apply + (map * v1 v2)))
 
