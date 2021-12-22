@@ -1,45 +1,32 @@
 (ns aoc2021.day17)
 
-(defn peak [y vy]
-  (if (zero? vy) y
-    (recur (+ y vy) (dec vy))))
+(defn y-step [[y vy]] [(+ y vy) (dec vy)])
+(defn x-step [[x vx]] [(+ x vx) (max 0 (dec vx))])
 
-(peak 0 9) ; 45
-
-; part 1: init vy is ymax-1
-(peak 0 (- 74 1)) ; 2701
-
-(defn capped-trajectory [x vx]
-  (if (zero? vx) [x]
-     (cons x (capped-trajectory (+ x vx) (dec vx)))))
+(ffirst (drop-while (comp pos? second) (iterate y-step [0 (dec 74)]))) ; 2701
 
 (defn valid-vx? [vx x-min x-max]
-  (<= x-min (last (take-while #(<= % x-max) (capped-trajectory 0 vx)))))
-
-(defn trajectory-y [y vy]
-  (map first (iterate (fn [[a b]] [(+ a b) (dec b)]) [y vy])))
-
-(defn trajectory-x [y vy]
-  (map first (iterate (fn [[a b]] [(+ a b) (max 0 (dec b))]) [y vy])))
+  (<= x-min (first (last (take-while #(and (pos? (second %)) (<= (first %) x-max)) (iterate x-step [0 vx]))))))
 
 (defn valid-vy? [vy y-min y-max]
-  (>= y-max (last (take-while #(>= % y-min) (trajectory-y 0 vy)))))
+  (>= y-max (last (take-while #(>= % y-min) (map first (iterate y-step [0 vy]))))))
+
+(defn upper-bound [x-max y-min] (fn [[x y]] (and (<= x x-max) (>= y y-min))))
+(defn lower-bound [x-min y-max] (fn [[x y]] (and (>= x x-min) (<= y y-max))))
 
 (defn hits-box? [vx vy x-min x-max y-min y-max]
-  (let [[x y] (last (take-while (fn [[x y]] (and (<= x x-max) (>= y y-min)))
-                                (map vector
-                                     (trajectory-x 0 vx)
-                                     (trajectory-y 0 vy))))]
-    (and (>= x x-min)
-         (<= y y-max))))
+  (->> (map #(vector (first %1) (first %2)) (iterate x-step [0 vx]) (iterate y-step [0 vy]))
+       (take-while (upper-bound x-max y-min))
+       (last)
+       ((lower-bound x-min y-max))))
 
-(count (for [vx (filter #(valid-vx? % 20 30) (range 0 (inc 30)))
+(count (for [vx (filter #(valid-vx? % 20 30) (range 1 (inc 30)))
              vy (filter #(valid-vy? % -10 -5) (range -10 (inc 10)))
              :when (hits-box? vx vy 20 30 -10 -5)]
          [vx vy])) ; 112
 
-(time (count (for [vx (filter #(valid-vx? % 281 311) (range 0 (inc 311)))
-             vy (filter #(valid-vy? % -74 -54) (range -74 (inc 74)))
-             :when (hits-box? vx vy 281 311 -74 -54)]
-         [vx vy]))) ; 1070
+(time (count (for [vx (filter #(valid-vx? % 281 311) (range 1 (inc 311)))
+                   vy (filter #(valid-vy? % -74 -54) (range -74 (inc 74)))
+                   :when (hits-box? vx vy 281 311 -74 -54)]
+               [vx vy]))) ; 1070
 
