@@ -8,8 +8,8 @@ pub fn main() !void {
     var num_count: usize = 0;
     var ones: [12]usize = .{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    while (try stdin.reader().readUntilDelimiterOrEof(&line_buff, '\n')) |_| {
-        for (line_buff) |char, idx| {
+    while (try stdin.reader().readUntilDelimiterOrEof(&line_buff, '\n')) |num_str| {
+        for (num_str) |char, idx| {
             if (char == '1') {
                 ones[idx] += 1;
             }
@@ -31,4 +31,12 @@ pub fn main() !void {
 
 fn add_right(num: *usize, new_bit: u8) void {
     num.* = (num.* << 1) | new_bit;
+}
+
+fn count_ones(ones: *[12]usize, num_str: [13]u8) void {
+    for (num_str) |char, idx| {
+        if (char == '1') {
+            ones[idx].* += 1;
+        }
+    }
 }
