@@ -9,4 +9,3 @@ while [ $day_num -le 2 ]; do
   cat $input | $bin
   let day_num+=1
 done
-
