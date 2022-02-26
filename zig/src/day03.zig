@@ -3,7 +3,7 @@ const std = @import("std");
 const stdin = std.io.getStdIn();
 const stdout = std.io.getStdOut();
 
-pub fn main() !void {
+fn read_input() ![1000][13]u8 {
     var line_buff: [13]u8 = undefined;
     var num_count: usize = 0;
     var input: [1000][13]u8 = undefined;
@@ -12,7 +12,11 @@ pub fn main() !void {
         input[num_count] = line_buff;
         num_count += 1;
     }
+    return input;
+}
 
+pub fn main() !void {
+    const input = try read_input();
     try stdout.writer().print("Day 3 Part 1: {d}\n", .{most_common(input) * least_common(input)});
 }
 
