@@ -71,3 +71,22 @@ Next, implement the bitwise filter using a simple recursion over the filtering, 
 ;; => 1007985
 ```
 
+## Zig solution
+
+[zig source](./zig/src/day03.zig)
+
+### Part 1
+Nothing wild here. Read the lines in as a `[13]u8`, counted the ones in a `[12]usize`. Then used a `most: usize`, with `add_right` (below) to build up a binary of the most and least common values.
+
+```zig
+fn add_right(num: *usize, new_bit: u8) void {
+    num.* = (num.* << 1) | new_bit;
+}
+
+for (ones) |num_ones| {
+    add_right(&most, if (num_ones > cmp) 1 else 0);
+}
+```
+
+### Part 2
+Is trickier. For a start you need to have the input in memory. I think my first move will be to refactor part 1 to do that.

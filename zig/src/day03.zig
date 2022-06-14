@@ -18,6 +18,22 @@ fn read_input() ![1000][13]u8 {
 pub fn main() !void {
     const input = try read_input();
     try stdout.writer().print("Day 3 Part 1: {d}\n", .{most_common(input) * least_common(input)});
+    try stdout.writer().print("Day 3 Part 2: {s}\n", .{filter_most_common(input)});
+}
+
+fn filter_most_common(nums: [1000][13]u8) [1000][13]u8 {
+    var buf: [13]u8 = undefined;
+    const mc: [13]u8 = try std.fmt.bufPrint(&buf, "{s}", most_common(nums));
+    std.debug.print("{s}\n", .{mc});
+    for (nums) |num_str, i| {
+        for (num_str) |num, j| {
+            if (num == mc[j]) {
+                nums[i] = null;
+                break;
+            }
+        }
+    }
+    return nums;
 }
 
 fn most_common(nums: [1000][13]u8) usize {
