@@ -14,7 +14,7 @@ Multiply the gamma and epsilon together.
 
 It would be simply enough to treat each bit as a character and count the frequencies. But since this is a binary problem, there must be a way to do this using binary operations. I feel like this is something to do with checksums and error detection? The counting thing is hard though, since you only have one bit. Or maybe there's a trick in that gamma and epsilon are inverse: wherever gamma has a 1, epsilon has a 0.
 
-The problem does say what to do in case of a tie, so I'd assume there aren't any.
+The problem doesn't say what to do in case of a tie, so I'd assume there aren't any.
 
 About 20 mins later: Couldn't figure out a smart way to do it, so here's a stupid way:
 
@@ -88,5 +88,14 @@ for (ones) |num_ones| {
 }
 ```
 
-### Part 2
-Is trickier. For a start you need to have the input in memory. I think my first move will be to refactor part 1 to do that.
+## C Solution
+
+[C Source](./c/day3.c)
+
+### Part 1
+Simple solution:
+
+1. Open file
+2. Set up a 'counts' array
+3. Loop through each character in each input line, adding to 'counts' if the char is 1
+4. Set up a 'most_common' array. Loop through the 'counts' array and check if the value of 
