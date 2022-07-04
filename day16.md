@@ -2,49 +2,78 @@
 
 Jesus, a _long_ question.
 
-"a method of packing numeric expressions into a binary sequence...saved in hexadecimal"
+"a method of packing numeric expressions into a binary sequence...saved in hexadecimal" 
 
-0 -> 0000, F -> 1111 (15 in dec) etc.
+i.e. one hex digit is four binary digits: 0 -> 0000, F -> 1111 (15 in dec) etc.
 
-The input has _packets_. Each packet starts with a 2x3 bit **header**: version and type id, 3 bits each
+The input consists of _packets_. A packet can contain other packets.
 
-Type 4 (100): packet is _literal value_, just contains a binary number.
+Each packet starts with a 2x3 bit **header**: _version_ and _type id_, of 3 bits each.
+
+## Literals 
+**Packet Type 4 (100)**: packet is _literal value_, which just contains a binary number.
 
 ```
 nibble: 111 122 22333 34444 55556 666
 binary: 110 100 10111 11110 00101 000
-categy: VVV TTT SAAAA SAAAA sAAAA GGG
-=> 011111100101 => 2021
+catgy:  VVV TTT SAAAA SAAAA sAAAA GGG
 
   V=version
   T=type
   S=signal bit 'not last'
-  s=signal but 'last'
+  s=signal bit 'last'
   A=output
   G=garbage
-```
-Non literals contain a _length type indicator_, LTI
 
-LTI 0: _packet container by length_: next 15 bits are a number representing the total length in bits of the sub-packets.
-
-LTI 1: _packet container by number of packets_
-
-```
-     LTIv  15bits   l=27bits 
-111 122 2233334444555566 66777788889 99900001111222233334444
-001 110 0000000000011011 11010001010 01010010001001000000000
-VVV TTT ILLLLLLLLLLLLLLL AAAAAAAAAAA BBBBBBBBBBBBBBBB
-                         VVVTTTsAAAA VVVTTTSBBBBsBBBB
-                                =10          10100=20
+  _0111 _1110 _0101
+=> 0111  1110  0101 => 2021
 ```
 
+## Operators
+
+**Other packet types** represent an _operator_ that performs a calculation on subpackets.
+
 ```
-        11 bits  3sp
-111 122 223333444455 55666677778 88899990000 1111222233334444
-111 011 100000000011 01010000001 10010000010 0011000001100000
-VVV TTT ILLLLLLLLLLL AAAAAAAAAAA BBBBBBBBBBB CCCCCCCCCCC
-                     VVVTTTsAAAA VVVTTTsBBBB VVVTTTsCCCC
-                               1           2           3
+Version + OperatorType + LTI + Length + Subpacket + LTI2 + Length2 + Subpacket2 + ...
+```
+
+## Length and length type indicator
+
+A LTI of 0 means the length of the subpacket is indicated by length: next 15 bits are a number representing the total length in bits of the sub-packets.
+
+
+```
+                                  Subpacket1     Subpacket2
+         LTI=0  l=27bits        
+001 110   0     000000000011011   110 100 01010  010 100 10001 00100 0000000
+VVV TTT   I     LLLLLLLLLLLLLLL 
+                                  VVV TTT sAAAA  VVV TTT SBBBB sBBBB GGGGGGG
+                                  1010=10        10100=20
+```
+
+A LTI of 1 means that the next 11 bits are a number giving the number of subpackets immediately contained in this packet.
+
+```
+        LTI=1  L=3sps       SP1            SP2            SP3
+111 011   1    00000000011  010 100 00001  100 100 00010  001 100 00011 00000
+VVV TTT   I    LLLLLLLLLLL
+                            VVV TTT sAAAA  VVV TTT sBBBB  VVV TTT sCCCC GGGGG
+```
+
+```
+      8-- -A- - -0---0---4- --A --- 8 ---0---1--- A-- -8- - -0---0---2---F- --4 --- 7---8 ---
+      100 010 1 00000000001 001 010 1 00000000001 101 010 0 000000000001011 110 100 01111 000
+pk1   VVV TTT S LLLLLLLLLLL VVV TTT S LLLLLLLLLLL VVV TTT s LLLLLLLLLLLLLLL VVV TTT sAAAA ggg
+      4                     1                     5                         6
+```
+
+```
+            1          2         3
+123 456 7 89012345678 901234567890123
+     6-- -2- - -0---0---8- | --0 --- 0 ---0---1---6--- | 1-- -1- --5-- | -6- --2 ---C- | --8 --- 8 ---0---2--- | 1---1---8-- | -E---3---4- | --
+     011 000 1 00000000010 | 000 000 0 000000000010110 | 000 100 01010 | 101 100 01011 | 001 000 1 00000000010 | 00010001100 | 01110001101 | 00
+Pk1  VVV TTT S LLLLLLLLLLL | VVV TTT b LLLLLLLLLLLLLLL | VVV TTT sAAAA | VVV TTT sAAAA | VVV TTT B LLLLLLLLLLL | VVVTTTsAAAA | VVVTTTsAAAA | 
+                                                  22
 ```
 
 ## Part 1

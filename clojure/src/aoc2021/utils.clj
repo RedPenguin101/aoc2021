@@ -37,3 +37,10 @@
     (vec (repeat r (vec (repeat c 0))))))
 
 (defn first-and-last [coll] [(first coll) (last coll)])
+
+(defn take-until [pred xs]
+  (reduce (fn [acc nxt] (if (pred nxt)
+                          (reduced (conj acc nxt))
+                          (conj acc nxt)))
+          []
+          xs))
