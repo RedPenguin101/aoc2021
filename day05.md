@@ -2,7 +2,7 @@
 
 A coordinate system. The input (e.g. `0,9 -> 5,9`) describes 'lines' of coordinates.
 
-Considering horizontal lines only, at how many points do at least two lines overlap?
+Considering horizontal lines only, _at how many points do at least two lines overlap?_
 
 A simple function here would be to take a line as an input and return a sequence of points. Then answering this question would be be a concatenation of all applying that function to all lines, then finding the frequency of the points.
 
@@ -92,4 +92,8 @@ This has the nice property that not only does out solving code for part 1 not ne
 
   )
 ```
+
+## In C
+If a line is `[x1 y1 x2 y2]`, then the line is horizontal if `y1=y2`.
+
 

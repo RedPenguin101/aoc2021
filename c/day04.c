@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// UTILS
 typedef struct {
   int* ptr;
   int len;
@@ -57,6 +58,7 @@ intslice parse_ints(char* str_buff, int max_len, const char* separators) {
   return x;
 }
 
+// Client
 bool is_row_complete(int* board, int row_num) {
   bool complete = true;
   for (int col = 0; col < 5; col++) {
