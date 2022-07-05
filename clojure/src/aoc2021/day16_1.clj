@@ -3,7 +3,7 @@
             [clojure.string :as str]
             [aoc2021.utils :as u]))
 
-(def version+type 6)
+(def header 6)
 
 (defn binary->num [xs] (Long/parseLong (apply str xs) 2))
 
@@ -21,23 +21,23 @@
 (declare binary->packets)
 
 (defn binary->literal [binary]
-  (let [value       (mapcat rest (u/take-until #(= \0 (first %)) (partition 5 (drop version+type binary))))]
+  (let [literal     (mapcat rest (u/take-until #(= \0 (first %)) (partition 5 (drop header binary))))]
     {:version       (get-version binary)
-     :value         (binary->num value)
-     :packet-length (+ version+type (* 5/4 (count value)))}))
+     :value         (binary->num literal)
+     :packet-length (+ header (* 5/4 (count literal)))}))
 
 (defn binary->operator [binary]
-  (let [bit-length?   (= \0 (first (drop version+type binary)))
-        preamble      (+ version+type 1 (if bit-length? 15 11))
-        length        (binary->num (take (if bit-length? 15 11) (drop (inc version+type) binary)))
-        subpackets    (if bit-length?
-                        (binary->packets        (take length (drop preamble binary)))
-                        (binary->packets length              (drop preamble binary)))]
+  (let [bit-type?   (= \0 (first (drop header binary)))
+        preamble    (+ header 1 (if bit-type? 15 11))
+        length      (binary->num (take (if bit-type? 15 11) (drop (inc header) binary)))
+        subpackets  (if bit-type?
+                      (binary->packets          (take length (drop preamble binary)))
+                      (binary->packets   length              (drop preamble binary)))]
 
     {:operation     (get-operation binary)
      :version       (get-version binary)
-     :packet-length (apply + preamble (map :packet-length subpackets))
-     :subpackets    subpackets}))
+     :subpackets    subpackets
+     :packet-length (apply + preamble (map :packet-length subpackets))}))
 
 (defn binary->packets
   ([binary] (binary->packets -1 binary))
